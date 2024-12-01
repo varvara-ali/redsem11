@@ -331,5 +331,94 @@ def task_func():
                 print("Неверная команда")
 
 
+def contact_func():
+    while True:
+        print("\nУправление контактами\n"
+              "1. Добавление нового контакта.\n"
+              "2. Поиск контакта по имени или номеру телефона.\n"
+              "3. Редактирование контакта.\n"
+              "4. Удаление контакта.\n"
+              "5. Импорт контактов в формате CSV.\n"
+              "6. Экспорт контактов в формате CSV.\n"
+              "7. Выход")
+        action = input("Выберите действие: ")
+        print("")
+
+        match action:
+            case "1":
+                name = input("Введите имя контакта: ")
+                if not name:
+                    print("Ошибка: имя - обязательное поле")
+                    continue
+
+                phone_number = input("Введите номер телефона: ")
+                email = input("Введите адрес электронной почты: ")
+
+                item: Contact = {
+                    "id": 0,
+                    "name": name,
+                    "phone": phone_number,
+                    "email": email
+                }
+                contact_manager.add_item(item)
+            case "2":
+                option = input("Выберите 'имя' или 'номер': ")
+                if option == 'имя':
+                    name = input("Введите имя контакта: ")
+                    try:
+                        contact: Contact = contact_manager.get_item("name", name)
+                    except ValueError:
+                        print("Нет контакта с таким именем")
+                        continue
+                elif option == 'номер':
+                    phone_number = input("Введите номер контакта: ")
+                    try:
+                        contact: Contact = contact_manager.get_item("phone", phone_number)
+                    except ValueError:
+                        print("Нет контакта с таким номером")
+                        continue
+                else:
+                    print("Неверный ввод.")
+                    continue
+                print(*[
+                    "\nКонтакт:",
+                    f'Имя: {contact["name"]}',
+                    f'Номер телефона: {contact["phone"]}',
+                    f'Электронная почта: {contact["email"]}'
+                ], sep="\n")
+            case "3":
+                name = input("Введите старое имя: ")
+
+                new_name = input("Введите новое имя контакта: ")
+                if not new_name:
+                    print("Ошибка: имя - обязательное поле")
+                    continue
+
+                phone_number = input("Введите номер телефона: ")
+                email = input("Введите адрес электронной почты: ")
+
+                data_to_update = {
+                    "name": new_name,
+                    "phone_number": phone_number,
+                    "email": email
+                }
+                contact_manager.update_item('name', name, data_to_update)
+            case "4":
+                name = input("Введите имя: ")
+                try:
+                    contact_manager.delete_item('name', name)
+                except ValueError:
+                    print("Нет элемента с таким заголовком.")
+            case "5":
+                path = input("Укажи путь до файла: ")
+                contact_manager.import_csv(path)
+            case "6":
+                path = input("Укажи путь до файла: ")
+                contact_manager.export_csv(path)
+            case "7":
+                break
+            case _:
+                print("Неверная команда")
+
 
 
