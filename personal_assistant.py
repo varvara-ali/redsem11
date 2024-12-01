@@ -63,3 +63,11 @@ class Manager:
         else:
             for item in data:
                 print(item)
+
+    def get_item(self, key, key_value):
+        data = self.load_data()
+        for item in data:
+            if item[key] == key_value:
+                return item
+        else:
+            raise ValueError(f"Нет элемента с {key}={key_value}")
