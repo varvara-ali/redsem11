@@ -79,3 +79,15 @@ class Manager:
 
         data.append(item)
         self.save_data(data)
+
+    def update_item(self, key, value, new_data: dict):
+        data = self.load_data()
+        for ind, item in enumerate(data, 0):
+            if item[key] == value:
+                for k, v in new_data.items():
+                    item[k] = v
+                break
+        else:
+            raise ValueError("Нет такого элемента")
+        self.save_data(data)
+        return 1
