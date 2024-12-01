@@ -120,3 +120,87 @@ note_manager = Manager('notes.json')
 task_manager = Manager('tasks.json')
 contact_manager = Manager('contacts.json')
 finance_manager = Manager('finance.json')
+
+
+def note_func():
+    while True:
+        print(
+            "\nВыберите действие:\n"
+            "1. Создать новую заметку\n"
+            "2. Просмотр списка заметок\n"
+            "3. Просмотр подробностей заметки\n"
+            "4. Редактирование заметки\n"
+            "5. Удаление заметки\n"
+            "6. Экспорт в csv\n"
+            "7. Импорт из csv\n"
+            "8. Выход в главное меню"
+        )
+        action = input("Действие: ")
+        print("")
+        match action:
+            case "1":
+                title = input("Введите заголовок: ")
+                if not title:
+                    print("Ошибка: заголовок- обязательное поле")
+                    continue
+                content = input("Введите содержимое заметки(или оставьте поле пустым): ")
+                timestamp = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+
+                note_manager.add_item({
+                    "id": 0,  # В последствии замениться
+                    "title": title,
+                    "content": content,
+                    "timestamp": timestamp
+                })
+            case "2":
+                notes = note_manager.load_data()
+                if not notes:
+                    print("Нет заметок")
+                    continue
+                print("Список заметок:")
+                for note in notes:
+                    print(note['title'])
+
+            case "3":
+                title = input("Введите заголовок заметки: ")
+                try:
+                    note = note_manager.get_item("title", title)
+                    print(*[
+                        f"Заголовок: {note['title']}",
+                        f"Содержание: {note['content']}",
+                        f"Время создания: {note['timestamp']}"
+                    ],sep='\n')
+                except ValueError:
+                    print("Нет заметки с таким заголовком")
+            case "4":
+                title = input("Введите заголовок заметки: ")
+
+                new_title = input("Введите новый заголовок: ")
+                if not title:
+                    print("Ошибка: заголовок - обязательное поле")
+                    continue
+                content = input("Введите обновленное содержимое заметки(или оставьте поле пустым): ")
+                data_to_update = {
+                    "title": new_title,
+                    "content": content
+                }
+                try:
+                    note_manager.update_item('title', title, data_to_update)
+                except ValueError:
+                    print("Нет элемента с таким заголовком.")
+            case "5":
+                title = input("Введите заголовок заметки: ")
+                try:
+                    note_manager.delete_item('title', title)
+                except ValueError:
+                    print("Нет элемента с таким заголовком.")
+            case "6":
+                path = input("Укажи путь до файла: ")
+                note_manager.export_csv(path)
+            case "7":
+                path = input("Укажи путь до файла: ")
+                note_manager.import_csv(path)
+            case "8":
+                break
+            case _:
+                print("Неверная команда")
