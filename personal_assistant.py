@@ -555,6 +555,33 @@ def finance_func():
                 print("Неверная команда")
 
 
-
+def calculator():
+    print("\nКалькулятор.")
+    while True:
+        a = input("\nПервое число (или 'выход'): ")
+        if a.lower() == "выход":
+            break
+        b = input("Второе число число: ")
+        try:
+            a = float(a)
+            b = float(b)
+        except ValueError:
+            print("Ошибка! Некорректное число.")
+            continue
+        action = input("Выберите операцию: + - * / : ")
+        match action:
+            case "+":
+                print(f"Результат сложения: {a + b}")
+            case "-":
+                print(f"Результат вычитания: {a - b}")
+            case "*":
+                print(f"Результат умножения: {a * b}")
+            case "/":
+                if b == 0:
+                    print("Ошибка! Нельзя делить на 0.")
+                    continue
+                print(f"Результат вычитания: {a / b}")
+            case _:
+                print(f"Ошибка! Неверная операция")
 
 
