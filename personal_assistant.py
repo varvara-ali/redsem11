@@ -36,3 +36,21 @@ class Finance(TypedDict):
     category: str
     date: str
     description: str
+
+
+class Manager:
+    def __init__(self, path):
+        self.path = path
+        open(path, 'a')
+
+    def load_data(self):
+        with open(self.path, 'r', encoding='utf-8') as f:
+            try:
+                data = json.load(f)
+            except JSONDecodeError:
+                data = []
+            return data
+
+    def save_data(self, data):
+        with open(self.path, 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=4)
