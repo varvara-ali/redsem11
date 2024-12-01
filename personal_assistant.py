@@ -204,3 +204,130 @@ def note_func():
                 break
             case _:
                 print("Неверная команда")
+
+
+def task_func():
+    print("\nУправление задачами")
+    while True:
+        print("\nВыберете действие\n"
+              "1. Добавление новой задачи.\n"
+              "2. Просмотр списка задач с отображением статуса, приоритета и срока.\n"
+              "3. Отметка задачи как выполненной.\n"
+              "4. Редактирование задачи.\n"
+              "5. Удаление задачи.\n"
+              "6. Импорт задач в формате CSV.\n"
+              "7. Экспорт задач в формате CSV.\n"
+              "8. Выход")
+        action = input("Выберите действие: ")
+        print("")
+
+        match action:
+            case "1":
+                title = input("Введите заголовок: ")
+                if not title:
+                    print("Ошибка: заголовок - обязательное поле")
+                    continue
+
+                description = input("Введите подробное описание задачи: ")
+
+                match input("Статус задачи. Выполнена(1) или нет(0 или любое другое значение))"):
+                    case "1":
+                        done = True
+                    case _:
+                        done = False
+
+                priority = input("Приоритет задачи («Высокий», «Средний», «Низкий»): ")
+                if priority.lower() not in ("высокий", "средний", "низкий"):
+                    print("Ошибка! Неверное значение приоритета.")
+                    continue
+
+                due_date = input("Срок выполнения задачи в формате ДД-ММ-ГГГГ: ")
+                try:
+                    datetime.strptime(due_date, '%d-%m-%Y')
+                except ValueError:
+                    print("Ошибка! Неверный формат даты.")
+                    continue
+
+                item = {
+                    "id": 0,
+                    "title": title,
+                    "description": description,
+                    "done": done,
+                    "priority": priority,
+                    "due_date": due_date,
+                }
+                task_manager.add_item(item)
+            case "2":
+                all_tasks: list[Task] = task_manager.load_data()
+                if not all_tasks:
+                    print("Список задач пуст.")
+                    continue
+                print("Список задач:")
+                for task in all_tasks:
+                    print(*[
+                        f'Название : {task["title"]}',
+                        f'Статус : {task["done"]}',
+                        f'Приоритет : {task["priority"]}',
+                        f'Срок : {task["due_date"]}',
+                        '___'
+                    ],sep="\n")
+            case "3":
+                title = input("Введите заголовок задачи: ")
+                try:
+                    task_manager.update_item('title', title, {"done": True})
+                except ValueError:
+                    print("Ошибка!. Задача с таким заголовком не найдена.")
+            case "4":
+                title = input("Введите старый заголовок: ")
+
+                new_title = input("Введите новый заголовок: ")
+                if not new_title:
+                    print("Ошибка: заголовок - обязательное поле")
+                    continue
+
+                description = input("Введите новое описание задачи: ")
+
+                match input("Статус задачи. Выполнена(1) или нет(любое другое значение)): "):
+                    case "1":
+                        done = True
+                    case _:
+                        done = False
+
+                priority = input("Приоритет задачи («Высокий», «Средний», «Низкий»).")
+                if priority.lower() not in ("высокий", "средний", "низкий"):
+                    print("Ошибка! Неверное значение приоритета.")
+                    continue
+
+                due_date = input("Срок выполнения задачи в формате ДД-ММ-ГГГГ: ")
+                try:
+                    datetime.strptime(due_date, '%d-%m-%Y')
+                except ValueError:
+                    print("Ошибка! Неверный формат даты.")
+                    continue
+
+                data_to_update = {
+                    "title": new_title,
+                    "description": description,
+                    "done": done,
+                    "priority": priority,
+                    "due_date": due_date,
+                }
+                task_manager.update_item('title', title, data_to_update)
+            case "5":
+                title = input("Введите заголовок заметки: ")
+                try:
+                    task_manager.delete_item('title', title)
+                except ValueError:
+                    print("Нет элемента с таким заголовком.")
+            case "6":
+                path = input("Укажи путь до файла: ")
+                task_manager.import_csv(path)
+            case "7":
+                path = input("Укажи путь до файла: ")
+                task_manager.export_csv(path)
+            case "8":
+                break
+            case _:
+                print("Неверная команда")
+
+
