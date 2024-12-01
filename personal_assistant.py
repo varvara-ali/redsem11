@@ -13,6 +13,7 @@ class Note(TypedDict):
     content: str
     timestamp: str
 
+
 class Task(TypedDict):
     id: int
     title: str
@@ -20,3 +21,10 @@ class Task(TypedDict):
     done: bool
     priority: str
     due_date: str
+
+
+class Contact(TypedDict):
+    id: int
+    name: str
+    phone: str
+    email: str
