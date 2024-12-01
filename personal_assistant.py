@@ -91,3 +91,13 @@ class Manager:
             raise ValueError("Нет такого элемента")
         self.save_data(data)
         return 1
+
+    def delete_item(self, key, value):
+        data = self.load_data()
+        for item in data:
+            if item[key] == value:
+                data.remove(item)
+                break
+        else:
+            raise ValueError("Нет такого элемента")
+        self.save_data(data)
