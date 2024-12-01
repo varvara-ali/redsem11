@@ -585,3 +585,34 @@ def calculator():
                 print(f"Ошибка! Неверная операция")
 
 
+def main():
+    print("Добро пожаловать в Персональный помощник!")
+    while True:
+        print("\nВыберите действие:\n"
+              "1. Управление заметками\n"
+              "2. Управление задачами\n"
+              "3. Управление контактами\n"
+              "4. Управление финансовыми записями\n"
+              "5. Калькулятор\n"
+              "6. Выход")
+        action = input('Действие: ')
+        match action:
+            case "1":
+                note_func()
+            case "2":
+                task_func()
+            case "3":
+                contact_func()
+            case "4":
+                finance_func()
+            case "5":
+                calculator()
+            case "6":
+                break
+            case _:
+                print("Неверный ввод! Попробуйте ещё раз.")
+    print("До встречи ♥♥♥")
+
+if __name__ == '__main__':
+    main()
+
