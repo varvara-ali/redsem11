@@ -611,7 +611,7 @@ def main():
                 break
             case _:
                 print("Неверный ввод! Попробуйте ещё раз.")
-    print("До встречи ♥♥♥")
+    print("До встречи")
 
 if __name__ == '__main__':
     main()
