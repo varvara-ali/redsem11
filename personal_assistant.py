@@ -28,3 +28,11 @@ class Contact(TypedDict):
     name: str
     phone: str
     email: str
+
+
+class Finance(TypedDict):
+    id: int
+    amount: float
+    category: str
+    date: str
+    description: str
