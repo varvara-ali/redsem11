@@ -54,3 +54,12 @@ class Manager:
     def save_data(self, data):
         with open(self.path, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=4)
+
+    def show_all(self, data_to_show = None):
+        data = self.load_data()
+        if data_to_show:
+            for item in data:
+                print(*[f"{k}, {v}" for k, v in item.items() if k in data_to_show])
+        else:
+            for item in data:
+                print(item)
