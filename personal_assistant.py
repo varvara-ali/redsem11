@@ -115,3 +115,8 @@ class Manager:
             writer = csv.DictReader(f)
             data = list(writer)
             self.save_data(data)
+
+note_manager = Manager('notes.json')
+task_manager = Manager('tasks.json')
+contact_manager = Manager('contacts.json')
+finance_manager = Manager('finance.json')
