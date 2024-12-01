@@ -71,3 +71,11 @@ class Manager:
                 return item
         else:
             raise ValueError(f"Нет элемента с {key}={key_value}")
+
+    def add_item(self, item):
+        data = self.load_data()
+        if data:
+            item["id"] = data[-1]['id']+1
+
+        data.append(item)
+        self.save_data(data)
