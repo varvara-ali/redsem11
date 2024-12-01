@@ -12,3 +12,11 @@ class Note(TypedDict):
     title: str
     content: str
     timestamp: str
+
+class Task(TypedDict):
+    id: int
+    title: str
+    description: str
+    done: bool
+    priority: str
+    due_date: str
