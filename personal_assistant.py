@@ -421,4 +421,140 @@ def contact_func():
                 print("Неверная команда")
 
 
+def finance_func():
+    while True:
+        print("\nУправление контактами\n"
+              "1. Добавление новой финансовой записи (доход или расход).\n"
+              "2. Просмотр всех записей с возможностью фильтрации по дате или категории.\n"
+              "3. Генерация отчётов о финансовой активности за определённый период.\n"
+              "4. Подсчет общего баланса. \n"
+              "5. Группировка доходов и расходов по категориям\n"
+              "6. Импорт финансовых записей в формате CSV.\n"
+              "7. Экспорт финансовых записей в формате CSV.\n"
+              "8. Выход")
+        action = input("Выберите действие: ")
+        print("")
+
+        match action:
+            case "1":
+                amount = input("Введите сумму: ")
+                try:
+                    amount = int(amount)
+                except ValueError:
+                    print("Ошибка! Некорректное число.")
+                    continue
+
+                category = input("Введите категорию: ")
+
+                date = input("Дата операции в формате ДД-ММ-ГГГГ: ")
+                try:
+                    datetime.strptime(date, '%d-%m-%Y')
+                except ValueError:
+                    print("Ошибка! Неверный формат даты.")
+                    continue
+
+                description = input("Введите описание операции: ")
+
+                item: Finance = {
+                    "id": 0,
+                    "amount": amount,
+                    "category": category,
+                    "date": date,
+                    "description": description
+                }
+                finance_manager.add_item(item)
+            case "2":
+                date = input("Введите дату транзакции или оставьте пустым: ")
+                if date:
+                    try:
+                        datetime.strptime(date, '%d-%m-%Y')
+                    except ValueError:
+                        print("Ошибка! Неверный формат даты.")
+                        continue
+
+                category = input("Введите категорию или оставьте пустым: ")
+
+                data = finance_manager.load_data()
+                if not data:
+                    print("Список пуст")
+                    continue
+                print("Список операций:")
+                for finance_operation in data:
+                    if not date or finance_operation['date'] == date:
+                        if not category or finance_operation['category'] == category:
+                            print(*[
+                                f'\nСумма операции: {finance_operation['amount']}',
+                                f'Категория: {finance_operation["category"]}',
+                                f'Дата операции: {finance_operation["date"]}',
+                                f'Описание: {finance_operation["description"]}'
+                            ], sep='\n')
+            case "3":
+                date_begin = input("Введите дату начала периода (ДД-ММ-ГГГГ): ")
+                try:
+                    date_begin = datetime.strptime(date_begin, '%d-%m-%Y')
+                except ValueError:
+                    print("Ошибка! Неверный формат даты.")
+                    continue
+
+                date_end = input("Введите дату окончания периода (ДД-ММ-ГГГГ): ")
+                try:
+                    date_end = datetime.strptime(date_end, '%d-%m-%Y')
+                except ValueError:
+                    print("Ошибка! Неверный формат даты.")
+                    continue
+
+                if date_begin > date_end:
+                    print("Ошибка! Время окончания периода должна быть больше чем время начала")
+
+                data = finance_manager.load_data()
+
+                s = 0
+
+                for finance_operation in data:
+                    if date_begin <= datetime.strptime(finance_operation['date'], '%d-%m-%Y') <= date_end:
+                        print(f"{finance_operation['amount']} - {finance_operation['description']}")
+                        s += finance_operation['amount']
+                print(f"Баланс за указанный период: {s}")
+            case "4":
+                data = finance_manager.load_data()
+
+                s = 0
+
+                for finance_operation in data:
+                    s += finance_operation['amount']
+                print(f"Общий баланс: {s}")
+            case "5":
+                data = finance_manager.load_data()
+                grouped_data = dict()
+                for operation in data:
+                    category = operation['category']
+                    if category in grouped_data.keys():
+                        grouped_data[category].append(operation)
+                    else:
+                        grouped_data[category] = [operation]
+
+                for category in grouped_data.keys():
+                    print(f"___\nОперации из категории {category}")
+                    for operation in grouped_data[category]:
+                        print(*[
+                            f'\nСумма операции: {operation['amount']}',
+                            f'Категория: {operation["category"]}',
+                            f'Дата операции: {operation["date"]}',
+                            f'Описание: {operation["description"]}'
+                        ], sep='\n')
+
+            case "6":
+                path = input("Укажи путь до файла: ")
+                finance_manager.import_csv(path)
+            case "7":
+                path = input("Укажи путь до файла: ")
+                finance_manager.export_csv(path)
+            case "8":
+                break
+            case _:
+                print("Неверная команда")
+
+
+
+
 
