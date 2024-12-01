@@ -101,3 +101,17 @@ class Manager:
         else:
             raise ValueError("Нет такого элемента")
         self.save_data(data)
+
+    def export_csv(self, path):
+        data = self.load_data()
+        with open(path, 'w', encoding='utf-8', newline='') as f:
+            if data:
+                writer = csv.DictWriter(f, fieldnames=data[0].keys())
+                writer.writeheader()
+                writer.writerows(data)
+
+    def import_csv(self, path):
+        with open(path, 'r', encoding='utf-8') as f:
+            writer = csv.DictReader(f)
+            data = list(writer)
+            self.save_data(data)
